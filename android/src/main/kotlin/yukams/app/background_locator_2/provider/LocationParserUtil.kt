@@ -17,8 +17,15 @@ class LocationParserUtil {
                 speedAccuracy = firstLocation.speedAccuracyMetersPerSecond
             }
 
+
+            val isMocked: Boolean = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+                firstLocation.isMock
+            } else {
+                firstLocation.isFromMockProvider
+            }
+
             return hashMapOf(
-                Keys.ARG_IS_MOCKED to firstLocation.isMock,
+                Keys.ARG_IS_MOCKED to isMocked,
                 Keys.ARG_LATITUDE to firstLocation.latitude,
                 Keys.ARG_LONGITUDE to firstLocation.longitude,
                 Keys.ARG_ACCURACY to firstLocation.accuracy,

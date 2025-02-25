@@ -182,7 +182,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
             intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG).toString()
         val iconNameDefault = "ic_launcher"
         var iconName = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON)
-        if (iconName == null || iconName.isEmpty()) {
+        if (iconName.isNullOrEmpty()) {
             iconName = iconNameDefault
         }
         icon = resources.getIdentifier(iconName, "mipmap", packageName)
