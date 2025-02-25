@@ -50,12 +50,13 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
         fun getBinaryMessenger(context: Context?): BinaryMessenger? {
             val messenger = backgroundEngine?.dartExecutor?.binaryMessenger
-            return messenger ?: if (context != null) {
-                backgroundEngine = FlutterEngine(context)
-                backgroundEngine?.dartExecutor?.binaryMessenger
-            } else {
-                messenger
-            }
+            return messenger
+                ?: if (context != null) {
+                    backgroundEngine = FlutterEngine(context)
+                    backgroundEngine?.dartExecutor?.binaryMessenger
+                } else {
+                    messenger
+                }
         }
     }
 
@@ -103,37 +104,48 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Notification channel is available in Android O and up
             val channel = NotificationChannel(
-                Keys.CHANNEL_ID, notificationChannelName, NotificationManager.IMPORTANCE_LOW
+                Keys.CHANNEL_ID, notificationChannelName,
+                NotificationManager.IMPORTANCE_LOW
             )
 
-            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-                channel
-            )
+            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .createNotificationChannel(channel)
         }
 
         val intent = Intent(this, getMainActivityClass(this))
         intent.action = Keys.NOTIFICATION_ACTION
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
-            this, 1, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            this,
+            1, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        return NotificationCompat.Builder(this, Keys.CHANNEL_ID).setContentTitle(notificationTitle)
-            .setContentText(notificationMsg).setStyle(
-                NotificationCompat.BigTextStyle().bigText(notificationBigMsg)
-            ).setSmallIcon(icon).setColor(notificationIconColor)
-            .setPriority(NotificationCompat.PRIORITY_HIGH).setContentIntent(pendingIntent)
+        return NotificationCompat.Builder(this, Keys.CHANNEL_ID)
+            .setContentTitle(notificationTitle)
+            .setContentText(notificationMsg)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(notificationBigMsg)
+            )
+            .setSmallIcon(icon)
+            .setColor(notificationIconColor)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true) // so when data is updated don't make sound and alert in android 8.0+
-            .setOngoing(true).build()
+            .setOngoing(true)
+            .build()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.e("IsolateHolderService", "onStartCommand => intent.action : ${intent?.action}")
         if (intent == null) {
             if (ActivityCompat.checkSelfPermission(
-                    this, Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(
-                    this, Manifest.permission.ACCESS_COARSE_LOCATION
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 Log.e("IsolateHolderService", "app has crashed, stopping it")
@@ -182,7 +194,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
             intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_BIG_MSG).toString()
         val iconNameDefault = "ic_launcher"
         var iconName = intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON)
-        if (iconName.isNullOrEmpty()) {
+        if (iconName == null || iconName.isEmpty()) {
             iconName = iconNameDefault
         }
         icon = resources.getIdentifier(iconName, "mipmap", packageName)
@@ -285,10 +297,11 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     private fun getLocationClient(context: Context): BLLocationProvider {
         return when (PreferencesManager.getLocationClient(context)) {
             LocationClient.Google -> GoogleLocationProviderClient(context, this)
+            LocationClient.Android -> AndroidLocationProviderClient(context, this)
         }
     }
 
-    override fun onLocationUpdated(location: HashMap<String, out Any?>?) {
+    override fun onLocationUpdated(location: HashMap<Any, Any>?) {
         try {
             context?.let {
                 FlutterInjector.instance().flutterLoader().ensureInitializationComplete(
@@ -301,15 +314,19 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
             //https://github.com/flutter/plugins/pull/1641/commits/4358fbba3327f1fa75bc40df503ca5341fdbb77d
             // new version of flutter can not invoke method from background thread
             if (location != null) {
-                val callback = context?.let {
-                    PreferencesManager.getCallbackHandle(
-                        it, Keys.CALLBACK_HANDLE_KEY
-                    )
-                } as Long
+                val callback =
+                    context?.let {
+                        PreferencesManager.getCallbackHandle(
+                            it,
+                            Keys.CALLBACK_HANDLE_KEY
+                        )
+                    } as Long
 
-                val result: HashMap<Any, Any> = hashMapOf(
-                    Keys.ARG_CALLBACK to callback, Keys.ARG_LOCATION to location
-                )
+                val result: HashMap<Any, Any> =
+                    hashMapOf(
+                        Keys.ARG_CALLBACK to callback,
+                        Keys.ARG_LOCATION to location
+                    )
 
                 sendLocationEvent(result)
             }
@@ -326,13 +343,16 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
         if (backgroundEngine != null) {
             context?.let {
-                val backgroundChannel = MethodChannel(
-                    getBinaryMessenger(it)!!, Keys.BACKGROUND_CHANNEL_ID
-                )
-                Handler(it.mainLooper).post {
-                    Log.d("plugin", "sendLocationEvent $result")
-                    backgroundChannel.invokeMethod(Keys.BCM_SEND_LOCATION, result)
-                }
+                val backgroundChannel =
+                    MethodChannel(
+                        getBinaryMessenger(it)!!,
+                        Keys.BACKGROUND_CHANNEL_ID
+                    )
+                Handler(it.mainLooper)
+                    .post {
+                        Log.d("plugin", "sendLocationEvent $result")
+                        backgroundChannel.invokeMethod(Keys.BCM_SEND_LOCATION, result)
+                    }
             }
         }
     }

@@ -14,7 +14,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterCallbackInformation
 import yukams.app.background_locator_2.IsolateHolderService.Companion.isServiceInitialized
 import yukams.app.background_locator_2.provider.LocationRequestOptions
-import java.lang.RuntimeException
 import java.util.concurrent.atomic.AtomicBoolean
 
 internal fun IsolateHolderService.startLocatorService(context: Context) {
@@ -44,7 +43,7 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
                 val callbackInfo =
                     FlutterCallbackInformation.lookupCallbackInformation(callbackHandle)
 
-                if(callbackInfo == null) {
+                if (callbackInfo == null) {
                     Log.e("IsolateHolderExtension", "Fatal: failed to find callback");
                     return;
                 }
