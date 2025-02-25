@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group 'yukams.app.background_locator_2'
+group 'yukams.app.background_locator_4'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -27,7 +27,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace = 'yukams.app.background_locator_2'
+    namespace = 'yukams.app.background_locator_4'
     compileSdk = 35
 
     sourceSets {
