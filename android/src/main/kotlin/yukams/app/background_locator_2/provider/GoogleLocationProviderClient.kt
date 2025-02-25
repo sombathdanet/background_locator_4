@@ -2,6 +2,8 @@ package yukams.app.background_locator_2.provider
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -33,6 +35,7 @@ class GoogleLocationProviderClient(
 }
 
 private class LocationListener(val listener: LocationUpdateListener?) : LocationCallback() {
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onLocationResult(location: LocationResult) {
         listener?.onLocationUpdated(LocationParserUtil.getLocationMapFromLocation(location))
     }

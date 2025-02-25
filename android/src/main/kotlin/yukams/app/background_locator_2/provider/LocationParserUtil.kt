@@ -1,13 +1,15 @@
 package yukams.app.background_locator_2.provider
 
 import android.os.Build
+import androidx.annotation.RequiresApi
 import com.google.android.gms.location.LocationResult
 import yukams.app.background_locator_2.Keys
 
 class LocationParserUtil {
     companion object {
 
-        fun getLocationMapFromLocation(location: LocationResult?): HashMap<String, Any?>? {
+        @RequiresApi(Build.VERSION_CODES.S)
+        fun getLocationMapFromLocation(location: LocationResult?): HashMap<String, Any>? {
             val firstLocation = location?.lastLocation ?: return null;
 
             var speedAccuracy = 0f
@@ -16,7 +18,7 @@ class LocationParserUtil {
             }
 
             return hashMapOf(
-                Keys.ARG_IS_MOCKED to false,
+                Keys.ARG_IS_MOCKED to firstLocation.isMock,
                 Keys.ARG_LATITUDE to firstLocation.latitude,
                 Keys.ARG_LONGITUDE to firstLocation.longitude,
                 Keys.ARG_ACCURACY to firstLocation.accuracy,
