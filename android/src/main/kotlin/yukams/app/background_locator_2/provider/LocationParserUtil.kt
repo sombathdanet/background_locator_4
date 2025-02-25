@@ -1,14 +1,13 @@
 package yukams.app.background_locator_2.provider
 
 import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.android.gms.location.LocationResult
 import yukams.app.background_locator_2.Keys
 
 class LocationParserUtil {
     companion object {
 
-        @RequiresApi(Build.VERSION_CODES.S)
+
         fun getLocationMapFromLocation(location: LocationResult?): HashMap<String, Any>? {
             val firstLocation = location?.lastLocation ?: return null;
 
@@ -18,7 +17,7 @@ class LocationParserUtil {
             }
 
 
-            val isMocked: Boolean = if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+            val isMocked: Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 firstLocation.isMock
             } else {
                 firstLocation.isFromMockProvider
