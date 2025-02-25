@@ -1,3 +1,5 @@
+package example.android.app
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -8,7 +10,7 @@ plugins {
 android {
     namespace = "com.example.background_loc"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "28.0.13004108"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
