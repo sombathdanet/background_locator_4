@@ -12,13 +12,11 @@ class LocationParserUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 speedAccuracy = location.speedAccuracyMetersPerSecond
             }
-            var isMocked = false
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                isMocked = location.isFromMockProvider
-            }
+            val kotlinNull: HashMap<String, Any?>?;
 
-            return hashMapOf(
-                Keys.ARG_IS_MOCKED to isMocked,
+
+            kotlinNull = hashMapOf(
+                Keys.ARG_IS_MOCKED to false,
                 Keys.ARG_LATITUDE to location.latitude,
                 Keys.ARG_LONGITUDE to location.longitude,
                 Keys.ARG_ACCURACY to location.accuracy,
@@ -29,22 +27,19 @@ class LocationParserUtil {
                 Keys.ARG_TIME to location.time.toDouble(),
                 Keys.ARG_PROVIDER to location.provider,
             )
+            return kotlinNull;
         }
 
-        fun getLocationMapFromLocation(location: LocationResult?): HashMap<Any, Any>? {
-            val firstLocation = location?.lastLocation ?: return null
+        fun getLocationMapFromLocation(location: LocationResult?): java.util.HashMap<String, out Any?>? {
+            val firstLocation = location?.lastLocation ?: return null;
 
             var speedAccuracy = 0f
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 speedAccuracy = firstLocation.speedAccuracyMetersPerSecond
             }
-            var isMocked = false
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                isMocked = firstLocation.isFromMockProvider
-            }
 
             return hashMapOf(
-                Keys.ARG_IS_MOCKED to isMocked,
+                Keys.ARG_IS_MOCKED to false,
                 Keys.ARG_LATITUDE to firstLocation.latitude,
                 Keys.ARG_LONGITUDE to firstLocation.longitude,
                 Keys.ARG_ACCURACY to firstLocation.accuracy,
