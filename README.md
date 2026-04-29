@@ -15,13 +15,26 @@ A Flutter plugin for receiving location updates even when the app is terminated.
 - 🔄 Auto-restart after device reboot (Android)
 - ⚙️ Platform-specific settings for iOS and Android
 
+## Platform Support
+
+| Platform | Support | Min Version |
+|----------|---------|-------------|
+| Android  | ✅ Full | API 21+     |
+| iOS      | ✅ Full | iOS 11.0+   |
+| Web      | ❌ Not supported | - |
+| Windows  | ❌ Not supported | - |
+| macOS    | ❌ Not supported | - |
+| Linux    | ❌ Not supported | - |
+
+**Note:** Web, Windows, macOS, and Linux platforms are not supported as they don't have native background location tracking capabilities.
+
 ## Installation
 
 Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  location_tracking: ^2.0.7
+  location_tracking: ^2.1.1
 ```
 
 Then run:

@@ -1,3 +1,25 @@
+## 2.1.2
+* Added library directive and proper exports for better code organization
+* Added web platform declaration (not supported)
+* Improved README with platform support table
+* Enhanced documentation structure
+
+## 2.1.1
+* Added comprehensive dartdoc documentation to all public APIs
+* Improved code documentation for better IDE support
+* Enhanced documentation for Android and iOS settings
+
+## 2.1.0
+* Updated permission_handler dependency to ^11.3.1 for compatibility
+* Fixed dependency conflict between root package and example app
+* Improved package stability
+
+## 2.0.8
+* Updated LICENSE with author name
+* Added publish script for easier publication
+* Minor documentation improvements
+* Ready for pub.dev publication
+
 ## 2.0.7
 * Updated package metadata for pub.dev publication
 * Added comprehensive README documentation
