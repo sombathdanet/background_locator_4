@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:background_locator_2/background_locator.dart';
-import 'package:background_locator_2/location_dto.dart';
-import 'package:background_locator_2/settings/android_settings.dart';
-import 'package:background_locator_2/settings/ios_settings.dart';
-import 'package:background_locator_2/settings/locator_settings.dart';
+import 'package:location_tracking/background_locator.dart';
+import 'package:location_tracking/location_dto.dart';
+import 'package:location_tracking/settings/android_settings.dart';
+import 'package:location_tracking/settings/ios_settings.dart';
+import 'package:location_tracking/settings/locator_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart' as permission_handler;
 import 'file_manager.dart';
@@ -16,6 +16,8 @@ import 'location_service_repository.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -97,9 +99,9 @@ class _MyAppState extends State<MyApp> {
     print('Initializing...');
     await BackgroundLocator.initialize();
     print('Initialization done');
-    final _isRunning = await BackgroundLocator.isServiceRunning();
+    final isRunning = await BackgroundLocator.isServiceRunning();
     setState(() {
-      isRunning = _isRunning;
+      isRunning = isRunning;
     });
     print('Running ${isRunning.toString()}');
   }
@@ -110,7 +112,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: Color(0xFF1E1E1E),
+        scaffoldBackgroundColor: const Color(0xFF1E1E1E),
       ),
       home: Scaffold(
         appBar: AppBar(
@@ -125,9 +127,9 @@ class _MyAppState extends State<MyApp> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 _buildStatusCard(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildControlButtons(),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Expanded(child: _buildLogCard()),
               ],
             ),
@@ -143,7 +145,7 @@ class _MyAppState extends State<MyApp> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [Colors.blueAccent, Colors.lightBlue],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -156,12 +158,12 @@ class _MyAppState extends State<MyApp> {
             children: [
               Text(
                 isRunning == true ? 'Active' : 'Inactive',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 "Geofence: ${isInsideGeofence ? 'Inside' : 'Outside'}",
-                style: TextStyle(fontSize: 16, color: Colors.white70),
+                style: const TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ],
           ),
@@ -175,11 +177,11 @@ class _MyAppState extends State<MyApp> {
       children: [
         Expanded(
           child: ElevatedButton.icon(
-            icon: Icon(Icons.play_arrow),
-            label: Text('Start'),
+            icon: const Icon(Icons.play_arrow),
+            label: const Text('Start'),
             onPressed: _onStart,
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               backgroundColor: Colors.green,
               shadowColor: Colors.greenAccent,
@@ -187,14 +189,14 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Expanded(
           child: ElevatedButton.icon(
-            icon: Icon(Icons.stop),
-            label: Text('Stop'),
+            icon: const Icon(Icons.stop),
+            label: const Text('Stop'),
             onPressed: onStop,
             style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: 16),
               backgroundColor: Colors.red,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               shadowColor: Colors.redAccent,
@@ -223,7 +225,7 @@ class _MyAppState extends State<MyApp> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(Icons.clear),
+                  icon: const Icon(Icons.clear),
                   onPressed: () {
                     FileManager.clearLogFile();
                     setState(() {
@@ -236,7 +238,7 @@ class _MyAppState extends State<MyApp> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Text(logStr),
             ),
           ),
@@ -247,10 +249,10 @@ class _MyAppState extends State<MyApp> {
 
   void onStop() async {
     await BackgroundLocator.unRegisterLocationUpdate();
-    final _isRunning = await BackgroundLocator.isServiceRunning();
-    print('Locator stopped: $_isRunning');
+    final isRunning = await BackgroundLocator.isServiceRunning();
+    print('Locator stopped: $isRunning');
     setState(() {
-      isRunning = _isRunning;
+      isRunning = isRunning;
     });
   }
 
@@ -258,13 +260,13 @@ class _MyAppState extends State<MyApp> {
     if (await _checkLocationPermission()) {
       print('Permissions granted, starting locator...');
       await _startLocator();
-      final _isRunning = await BackgroundLocator.isServiceRunning();
-      print('Locator started: $_isRunning');
+      final isRunning = await BackgroundLocator.isServiceRunning();
+      print('Locator started: $isRunning');
       setState(() {
-        isRunning = _isRunning;
+        isRunning = isRunning;
         lastLocation = null;
       });
-      print('Locator started: $_isRunning');
+      print('Locator started: $isRunning');
     } else {
       print('Permissions not granted');
       // show error

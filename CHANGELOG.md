@@ -1,3 +1,11 @@
+## 2.0.7
+* Updated package metadata for pub.dev publication
+* Added comprehensive README documentation
+* Added MIT LICENSE file
+* Fixed package references and branding
+* Improved documentation with usage examples
+* Ready for pub.dev publication
+
 ## 2.0.6
 * Fixing iOS build
 * Fixing memory leak on Android

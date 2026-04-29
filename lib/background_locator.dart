@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:background_locator_2/settings/android_settings.dart';
-import 'package:background_locator_2/settings/ios_settings.dart';
-import 'package:background_locator_2/utils/settings_util.dart';
+import 'package:location_tracking/settings/android_settings.dart';
+import 'package:location_tracking/settings/ios_settings.dart';
+import 'package:location_tracking/utils/settings_util.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 

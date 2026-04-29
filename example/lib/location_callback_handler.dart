@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:background_locator_2/location_dto.dart';
+import 'package:location_tracking/location_dto.dart';
 
 import 'location_service_repository.dart';
 
